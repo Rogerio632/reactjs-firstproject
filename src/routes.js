@@ -1,5 +1,4 @@
 import React from 'react';
-// eslint-disable-next-line import/no-extraneous-dependencies
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
 
 import Main from './pages/Main';
