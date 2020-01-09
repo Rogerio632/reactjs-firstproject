@@ -1,11 +1,11 @@
 import React from 'react';
-import { Title } from  './styles';
+import { Title, Small } from './styles';
 
 export default function Main() {
   return (
-  <Title error={false}>
-    Página Principal da pasta MAIN
-    <small>Texto pequeno</small>
-  </Title>
+    <>
+      <Title error>Main player</Title>
+      <Small success>Secondary Player</Small>
+    </>
   );
 }
