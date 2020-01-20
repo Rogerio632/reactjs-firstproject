@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { keyframes, css } from 'styled-components';
 
 export const Container = styled.div`
   background: #fff;
@@ -8,12 +8,12 @@ export const Container = styled.div`
   padding: 30px;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
 
-  h1{
+  h1 {
     font-size: 21px;
     display: flex;
     align-items: center;
   }
-  svg{
+  svg {
     margin-right: 10px;
   }
 `;
@@ -23,33 +23,76 @@ export const Form = styled.form`
   display: flex;
   flex-direction: row;
 
-  input{
+  input {
     flex: 1;
     border: 1px solid #eee;
     border-radius: 4px;
     padding: 10px 15px;
     font-size: 16px;
-    }
-
+  }
 `;
 
-export const SubmitButton = styled.button.attrs({
-  type: 'submit',
-})`
+const rotate = keyframes`
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  `;
 
+export const SubmitButton = styled.button.attrs(props => ({
+  type: 'submit',
+  disabled: props.loading,
+}))`
   border: 0;
   border-radius: 4px;
   background: #7159c1;
   padding: 0 15px;
   margin-left: 10px;
 
-
   display: flex;
   align-items: center;
   justify-content: center;
 
-  svg{
+  &[disabled] {
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+
+  svg {
     margin-right: 0;
   }
 
+  ${props =>
+    props.loading &&
+    css`
+      svg {
+        animation: ${rotate} 2s linear infinite;
+      }
+    `}
+`;
+
+export const List = styled.ul`
+  list-style: none;
+  margin-top: 30px;
+
+  li {
+    padding: 15px 0;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+    /**
+  * quando se tem o & +, é verificado se há um li antes do atual.
+  * Caso há, é aplicado a estilização. Caso não, não é aplicado.
+   */
+    & + li {
+      border-top: 1px solid #ccc;
+    }
+  }
+  a {
+    color: #7159c1;
+    text-decoration: none;
+  }
 `;
