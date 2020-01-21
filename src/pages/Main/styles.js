@@ -1,23 +1,5 @@
 import styled, { keyframes, css } from 'styled-components';
 
-export const Container = styled.div`
-  background: #fff;
-  max-width: 700px;
-  margin: 80px auto;
-  border-radius: 4px;
-  padding: 30px;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-
-  h1 {
-    font-size: 21px;
-    display: flex;
-    align-items: center;
-  }
-  svg {
-    margin-right: 10px;
-  }
-`;
-
 export const Form = styled.form`
   margin-top: 30px;
   display: flex;
@@ -61,7 +43,7 @@ export const SubmitButton = styled.button.attrs(props => ({
   }
 
   svg {
-    margin-right: 0;
+    margin-right: 0px !important;
   }
 
   ${props =>
