@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { FaGithubAlt, FaPlus, FaSpinner } from 'react-icons/fa';
 import { Form, SubmitButton, List } from './styles';
-import Container from '../../components/Container';
+import Container, { CustomError } from '../../components/Container';
 
 import api from '../../services/api';
 
@@ -12,6 +12,8 @@ export default class Main extends Component {
     newRepo: '',
     repositories: [],
     loading: false,
+    repoExist: '',
+    err: '',
   };
 
   // Carrega os dados do localstorage
@@ -39,25 +41,42 @@ export default class Main extends Component {
   handleSubmit = async e => {
     e.preventDefault();
 
-    this.setState({ loading: true });
+    try {
+      this.setState({ loading: true });
 
-    const { newRepo, repositories } = this.state;
+      const { newRepo, repositories } = this.state;
 
-    const response = await api.get(`repos/${newRepo}`);
+      const verifyRepo = await repositories.filter(
+        repo => repo.name === newRepo
+      );
 
-    const data = {
-      name: response.data.full_name,
-    };
+      if (verifyRepo.length !== 0) {
+        throw new Error('Repositório duplicado!');
+      }
 
-    this.setState({
-      repositories: [...repositories, data],
-      newRepo: '',
-      loading: false,
-    });
+      const response = await api.get(`repos/${newRepo}`);
+
+      if (!response) {
+        throw new Error('Nenhum repositório encontrado');
+      }
+
+      const data = {
+        name: response.data.full_name,
+      };
+
+      this.setState({
+        repositories: [...repositories, data],
+        newRepo: '',
+        loading: false,
+        repoExist: true,
+      });
+    } catch (err) {
+      this.setState({ loading: false, repoExist: false, err: err.message });
+    }
   };
 
   render() {
-    const { newRepo, loading, repositories } = this.state;
+    const { newRepo, loading, repositories, repoExist, err } = this.state;
 
     return (
       <Container>
@@ -66,19 +85,21 @@ export default class Main extends Component {
           Repositórios
         </h1>
 
-        <Form onSubmit={this.handleSubmit}>
-          <input
-            type="text"
-            placeholder="Adicionar repositório"
-            value={newRepo}
-            onChange={this.handleInputChange}
-          />
-
+        <Form onSubmit={this.handleSubmit} repoExist={repoExist}>
+          <div>
+            <input
+              type="text"
+              placeholder="Adicionar repositório"
+              value={newRepo}
+              onChange={this.handleInputChange}
+            />
+            {repoExist === false && <CustomError>{err}</CustomError>}
+          </div>
           <SubmitButton loading={loading}>
             {loading ? (
               <FaSpinner color="#fff" size="14" />
             ) : (
-              <FaPlus color="#fff" size={14} />
+              <FaPlus color="#fff" size="14" />
             )}
           </SubmitButton>
         </Form>

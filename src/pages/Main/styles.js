@@ -1,9 +1,23 @@
 import styled, { keyframes, css } from 'styled-components';
 
-export const Form = styled.form`
+export const Form = styled.form.attrs(props => ({
+  repoExist: props.repoExist,
+}))`
   margin-top: 30px;
   display: flex;
   flex-direction: row;
+
+  div {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+  div span {
+    max-width: fit-content;
+    font-size: 12px;
+    color: #f00;
+    margin-top: 5px;
+  }
 
   input {
     flex: 1;
@@ -11,6 +25,7 @@ export const Form = styled.form`
     border-radius: 4px;
     padding: 10px 15px;
     font-size: 16px;
+    border-color: ${props => (props.repoExist === false ? '#f00' : '#ccc')};
   }
 `;
 
@@ -32,7 +47,6 @@ export const SubmitButton = styled.button.attrs(props => ({
   background: #7159c1;
   padding: 0 15px;
   margin-left: 10px;
-
   display: flex;
   align-items: center;
   justify-content: center;
