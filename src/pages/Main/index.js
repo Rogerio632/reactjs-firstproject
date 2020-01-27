@@ -93,7 +93,7 @@ export default class Main extends Component {
               value={newRepo}
               onChange={this.handleInputChange}
             />
-            {repoExist === false && <CustomError>{err}</CustomError>}
+            <p>{repoExist === false && <CustomError>{err}</CustomError>}</p>
           </div>
           <SubmitButton loading={loading}>
             {loading ? (
