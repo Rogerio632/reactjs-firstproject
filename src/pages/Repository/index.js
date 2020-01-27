@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { FaSpinner } from 'react-icons/fa';
-import { Loading, Owner, IssueList } from './styles';
+import { Loading, Owner, IssueList, Select } from './styles';
 import Container from '../../components/Container';
 
 import api from '../../services/api';
@@ -20,6 +20,8 @@ export default class Repository extends Component {
     repository: {},
     issues: [],
     loading: true,
+    issueStates: ['open', 'closed', 'all'],
+    issueState: '',
   };
 
   async componentDidMount() {
@@ -29,10 +31,9 @@ export default class Repository extends Component {
 
     const [repository, issues] = await Promise.all([
       api.get(`/repos/${repoName}`),
-      api.get(`/repos/${repoName}/issues`),
+      api.get(`/repos/${repoName}/issues?state=open`),
       {
         params: {
-          state: 'open',
           per_page: 5,
         },
       },
@@ -45,8 +46,22 @@ export default class Repository extends Component {
     });
   }
 
+  handleSelectChange = e => {
+    this.setState({ issueState: e.target.value });
+    const { issueState } = this.state;
+    const { match } = this.props;
+
+    console.log(issueState);
+
+    // const repoName = decodeURIComponent(match.params.repository);
+
+    // const repoIssue = api.get(`/repos/${repoName}/issues?state=${issueState}`);
+
+    // this.setState({ issues: repoIssue });
+  };
+
   render() {
-    const { repository, issues, loading } = this.state;
+    const { repository, issues, loading, issueStates, issueState } = this.state;
 
     if (loading) {
       return (
@@ -63,6 +78,18 @@ export default class Repository extends Component {
           <img src={repository.owner.avatar_url} alt={repository.owner.login} />
           <h1>{repository.name}</h1>
           <p>{repository.description}</p>
+
+          {issues.length !== 0 && (
+            <p>
+              <Select onChange={this.handleSelectChange}>
+                {issueStates.map(state => (
+                  <option key={state} value={state}>
+                    {state}
+                  </option>
+                ))}
+              </Select>
+            </p>
+          )}
         </Owner>
 
         <IssueList>

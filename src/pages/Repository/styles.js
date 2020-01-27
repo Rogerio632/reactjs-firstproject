@@ -111,3 +111,18 @@ export const IssueList = styled.ul`
     }
   }
 `;
+
+export const Select = styled.select`
+  border-radius: 3px;
+  background: #fff;
+  border: none;
+  font-size: 13px;
+  font-family: Arial, Helvetica, sans-serif;
+  box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.4);
+
+  :hover {
+    cursor: pointer;
+    background: #7159c1;
+    color: #fff;
+  }
+`;
