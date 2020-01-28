@@ -1,3 +1,4 @@
+/* eslint-disable react/no-did-update-set-state */
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
@@ -31,12 +32,12 @@ export default class Repository extends Component {
 
     const [repository, issues] = await Promise.all([
       api.get(`/repos/${repoName}`),
-      api.get(`/repos/${repoName}/issues?state=open`),
-      {
+      api.get(`/repos/${repoName}/issues`, {
         params: {
           per_page: 5,
+          state: 'open',
         },
-      },
+      }),
     ]);
 
     this.setState({
@@ -46,22 +47,26 @@ export default class Repository extends Component {
     });
   }
 
+  async componentDidUpdate(_, prevState) {
+    const { issueState } = this.state;
+
+    const { match } = this.props;
+    const repoName = decodeURIComponent(match.params.repository);
+
+    if (prevState.issueState !== issueState) {
+      const newIssues = await api.get(
+        `/repos/${repoName}/issues?state=${issueState}`
+      );
+      this.setState({ issues: newIssues.data });
+    }
+  }
+
   handleSelectChange = e => {
     this.setState({ issueState: e.target.value });
-    const { issueState } = this.state;
-    const { match } = this.props;
-
-    console.log(issueState);
-
-    // const repoName = decodeURIComponent(match.params.repository);
-
-    // const repoIssue = api.get(`/repos/${repoName}/issues?state=${issueState}`);
-
-    // this.setState({ issues: repoIssue });
   };
 
   render() {
-    const { repository, issues, loading, issueStates, issueState } = this.state;
+    const { repository, issues, loading, issueStates } = this.state;
 
     if (loading) {
       return (
