@@ -70,6 +70,11 @@ export const IssueList = styled.ul`
     & + li {
       margin-top: 10px;
     }
+    :last-child {
+      display: flex;
+      justify-content: space-evenly;
+      border: none;
+    }
     img {
       width: 36px;
       height: 36px;
@@ -108,6 +113,15 @@ export const IssueList = styled.ul`
         font-size: 12px;
         color: #999;
       }
+    }
+  }
+  svg {
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+
+    :hover {
+      color: #333;
     }
   }
 `;

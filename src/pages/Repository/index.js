@@ -2,7 +2,11 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { FaSpinner } from 'react-icons/fa';
+import {
+  FaSpinner,
+  FaArrowAltCircleLeft,
+  FaArrowAltCircleRight,
+} from 'react-icons/fa';
 import { Loading, Owner, IssueList, Select } from './styles';
 import Container from '../../components/Container';
 
@@ -54,9 +58,13 @@ export default class Repository extends Component {
     const repoName = decodeURIComponent(match.params.repository);
 
     if (prevState.issueState !== issueState) {
-      const newIssues = await api.get(
-        `/repos/${repoName}/issues?state=${issueState}`
-      );
+      const newIssues = await api.get(`/repos/${repoName}/issues`, {
+        params: {
+          per_page: issueState === 'all' ? 10 : 5,
+          state: issueState,
+        },
+      });
+
       this.setState({ issues: newIssues.data });
     }
   }
@@ -112,6 +120,11 @@ export default class Repository extends Component {
               </div>
             </li>
           ))}
+
+          <li>
+            <FaArrowAltCircleLeft />
+            <FaArrowAltCircleRight />
+          </li>
         </IssueList>
       </Container>
     );
