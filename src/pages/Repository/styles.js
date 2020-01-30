@@ -55,7 +55,9 @@ export const Owner = styled.header`
   }
 `;
 
-export const IssueList = styled.ul`
+export const IssueList = styled.ul.attrs(props => ({
+  disabled: props.disabled,
+}))`
   padding-top: 30px;
   margin-top: 30px;
   border-top: 1px solid #eee;
@@ -115,10 +117,15 @@ export const IssueList = styled.ul`
       }
     }
   }
+
   svg {
     width: 40px;
     height: 40px;
     cursor: pointer;
+
+    [disabled] {
+      color: #ccc;
+    }
 
     :hover {
       color: #333;

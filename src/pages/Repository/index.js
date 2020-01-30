@@ -27,10 +27,12 @@ export default class Repository extends Component {
     loading: true,
     issueStates: ['open', 'closed', 'all'],
     issueState: '',
+    page: 1,
   };
 
   async componentDidMount() {
     const { match } = this.props;
+    const { page } = this.state;
 
     const repoName = decodeURIComponent(match.params.repository);
 
@@ -40,41 +42,47 @@ export default class Repository extends Component {
         params: {
           per_page: 5,
           state: 'open',
+          page,
         },
       }),
     ]);
 
-    this.setState({
+    await this.setState({
       repository: repository.data,
       issues: issues.data,
       loading: false,
+      page: 1,
     });
   }
 
-  async componentDidUpdate(_, prevState) {
-    const { issueState } = this.state;
+  async componentDidUpdate(prevProps, prevState) {
+    const { issueState, page } = this.state;
 
     const { match } = this.props;
     const repoName = decodeURIComponent(match.params.repository);
 
-    if (prevState.issueState !== issueState) {
+    if (prevState.issueState !== issueState || prevState.page !== page) {
       const newIssues = await api.get(`/repos/${repoName}/issues`, {
         params: {
           per_page: issueState === 'all' ? 10 : 5,
           state: issueState,
+          page,
         },
       });
-
       this.setState({ issues: newIssues.data });
     }
   }
+
+  handlePage = async page => {
+    await this.setState({ page: page === 'back' ? page - 1 : page + 1 });
+  };
 
   handleSelectChange = e => {
     this.setState({ issueState: e.target.value });
   };
 
   render() {
-    const { repository, issues, loading, issueStates } = this.state;
+    const { repository, issues, loading, issueStates, page } = this.state;
 
     if (loading) {
       return (
@@ -105,7 +113,7 @@ export default class Repository extends Component {
           )}
         </Owner>
 
-        <IssueList>
+        <IssueList issues={issues}>
           {issues.map(issue => (
             <li key={String(issue.id)}>
               <img src={issue.user.avatar_url} alt={issue.user.login} />
@@ -122,8 +130,12 @@ export default class Repository extends Component {
           ))}
 
           <li>
-            <FaArrowAltCircleLeft />
-            <FaArrowAltCircleRight />
+            <FaArrowAltCircleLeft
+              disabled={page < 2}
+              onClick={this.handlePage('back')}
+            />
+
+            <FaArrowAltCircleRight onClick={this.handlePage('next')} />
           </li>
         </IssueList>
       </Container>
