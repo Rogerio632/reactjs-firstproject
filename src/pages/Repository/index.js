@@ -132,10 +132,10 @@ export default class Repository extends Component {
           <li>
             <FaArrowAltCircleLeft
               disabled={page < 2}
-              onClick={this.handlePage('back')}
+              onClick={() => this.handlePage('back')}
             />
 
-            <FaArrowAltCircleRight onClick={this.handlePage('next')} />
+            <FaArrowAltCircleRight onClick={() => this.handlePage('next')} />
           </li>
         </IssueList>
       </Container>
