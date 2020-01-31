@@ -11,4 +11,9 @@ function RepoList({ key, repoName }) {
   );
 }
 
+RepoList.propTypes = {
+  key: propTypes.string.isRequired,
+  repoName: propTypes.string.isRequired,
+};
+
 export default RepoList;

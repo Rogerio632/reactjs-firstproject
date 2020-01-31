@@ -21,4 +21,14 @@ function IssueGroup({ key, avatar_url, alt, linkTo, title, user, labels }) {
   );
 }
 
+IssueGroup.propTypes = {
+  key: propTypes.string,
+  avatar_url: propTypes.string,
+  alt: propTypes.string,
+  linkTo: propTypes.string,
+  title: propTypes.string,
+  user: propTypes.string,
+  labels: propTypes.string,
+};
+
 export default IssueGroup;
