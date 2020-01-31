@@ -7,7 +7,9 @@ import {
   FaArrowAltCircleLeft,
   FaArrowAltCircleRight,
 } from 'react-icons/fa';
+
 import { Loading, Owner, IssueList, Select } from './styles';
+import IssueGroup from '../../components/Repository/IssueGroup';
 import Container from '../../components/Container';
 
 import api from '../../services/api';
@@ -55,7 +57,7 @@ export default class Repository extends Component {
     });
   }
 
-  async componentDidUpdate(prevProps, prevState) {
+  async componentDidUpdate(_, prevState) {
     const { issueState, page } = this.state;
 
     const { match } = this.props;
@@ -73,8 +75,9 @@ export default class Repository extends Component {
     }
   }
 
-  handlePage = async page => {
-    await this.setState({ page: page === 'back' ? page - 1 : page + 1 });
+  handlePage = async direction => {
+    const { page } = this.state;
+    await this.setState({ page: direction === 'back' ? page - 1 : page + 1 });
   };
 
   handleSelectChange = e => {
@@ -87,7 +90,7 @@ export default class Repository extends Component {
     if (loading) {
       return (
         <Loading loading={loading}>
-          <FaSpinner size="25" color="#fff" />;
+          <FaSpinner size="25" color="#fff" />
         </Loading>
       );
     }
@@ -115,18 +118,15 @@ export default class Repository extends Component {
 
         <IssueList issues={issues}>
           {issues.map(issue => (
-            <li key={String(issue.id)}>
-              <img src={issue.user.avatar_url} alt={issue.user.login} />
-              <div>
-                <strong>
-                  <a href={issue.html_url}>{issue.title}</a>
-                  {issue.labels.map(label => (
-                    <span key={String(label.id)}>{label.name}</span>
-                  ))}
-                </strong>
-                <p>{issue.user.login}</p>
-              </div>
-            </li>
+            <IssueGroup
+              key={String(issue.id)}
+              avatar_url={issue.user.avatar_url}
+              alt={issue.user.login}
+              linkTo={issue.html_url}
+              title={issue.title}
+              user={issue.user.login}
+              labels={issues.labels}
+            />
           ))}
 
           <li>
@@ -135,7 +135,10 @@ export default class Repository extends Component {
               onClick={() => this.handlePage('back')}
             />
 
-            <FaArrowAltCircleRight onClick={() => this.handlePage('next')} />
+            <FaArrowAltCircleRight
+              disabled={page === page.length}
+              onClick={() => this.handlePage('next')}
+            />
           </li>
         </IssueList>
       </Container>
