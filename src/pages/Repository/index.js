@@ -81,7 +81,7 @@ export default class Repository extends Component {
   };
 
   handleSelectChange = e => {
-    this.setState({ issueState: e.target.value });
+    this.setState({ issueState: e.target.value, page: 1 });
   };
 
   render() {
@@ -115,32 +115,33 @@ export default class Repository extends Component {
             </p>
           )}
         </Owner>
+        {issues && (
+          <IssueList issues={issues}>
+            {issues.map(issue => (
+              <IssueGroup
+                key={String(issue.id)}
+                avatar_url={issue.user.avatar_url}
+                alt={issue.user.login}
+                linkTo={issue.html_url}
+                title={issue.title}
+                user={issue.user.login}
+                labels={issue.labels}
+              />
+            ))}
 
-        <IssueList issues={issues}>
-          {issues.map(issue => (
-            <IssueGroup
-              key={String(issue.id)}
-              avatar_url={issue.user.avatar_url}
-              alt={issue.user.login}
-              linkTo={issue.html_url}
-              title={issue.title}
-              user={issue.user.login}
-              labels={issues.labels}
-            />
-          ))}
+            <li>
+              <FaArrowAltCircleLeft
+                disabled={page < 2}
+                onClick={() => this.handlePage('back')}
+              />
 
-          <li>
-            <FaArrowAltCircleLeft
-              disabled={page < 2}
-              onClick={() => this.handlePage('back')}
-            />
-
-            <FaArrowAltCircleRight
-              disabled={page === page.length}
-              onClick={() => this.handlePage('next')}
-            />
-          </li>
-        </IssueList>
+              <FaArrowAltCircleRight
+                disabled={page === page.length}
+                onClick={() => this.handlePage('next')}
+              />
+            </li>
+          </IssueList>
+        )}
       </Container>
     );
   }
