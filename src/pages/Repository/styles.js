@@ -125,6 +125,7 @@ export const IssueList = styled.ul.attrs(props => ({
 
     &[disabled] {
       color: #ccc;
+      pointer-events: none;
       :hover {
         color: #ccc;
         cursor: not-allowed;
