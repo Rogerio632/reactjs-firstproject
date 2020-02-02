@@ -144,7 +144,7 @@ export const Select = styled.select`
   border: none;
   font-size: 13px;
   font-family: Arial, Helvetica, sans-serif;
-  box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.4);
+  box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.5);
 
   :hover {
     cursor: pointer;
